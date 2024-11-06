@@ -1,0 +1,109 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row align-items-center">
+        <div class="col"><h2>{{ item_category.item_category_name }}</h2></div>
+    </div>
+
+    <div class="row">
+        <div class="col">
+            <button type="button" class="btn-primary float-end" onclick="location.href='{{ game_history_url }}';">履歴</button>
+            <button type="button" class="btn-second float-end" id="gameShare">共有</button>
+            <button type="button" class="btn-second float-end" onclick="location.href='{{ category_list_url }}';">戻る</button>
+        </div>
+    </div>
+        
+    <div class="row row-cols-2">
+        {% for game_item in game_items %}
+        {% if game_item.is_opened %}
+        <button class="col show_modal card mb-3 mr-1 bg-secondary">
+        {% else %}
+        <button class="col show_modal card mb-3 mr-1">
+        {% endif %}
+            <p class="item_id" hidden>{{ game_item.id }}</p>
+            <p class="item_place_store" hidden>{{ game_item.item.place }}</p>
+
+            <div class="row">
+                <h6 class="card-text text-start">{{ game_item.item.item_name }}</h6>
+            </div>
+            <div class="row">
+                <div class="col-6">
+                    <img class="card-img-top" src="{{ game_item.item.item_image }}" alt="Card image cap">
+                </div>
+                <div class="col-6">
+                    {% if game_item.is_opened %}
+                    <p class="card-text item_place mb-0 text-end">{{ game_item.item.place }}位</p>
+                    {% else %}
+                    <p class="card-text item_place mb-0 text-end">?位</p>
+                    {% endif %}
+                    <p class="card-text item_price hidden mb-0 text-end">{{ game_item.item.price }}円</p>
+                </div>
+            </div>
+        </button>
+        {% endfor %}
+    </div>
+</div>
+
+<!-- ボタン・リンククリック後に表示される画面の内容 -->
+<div class="modal fade" id="placecConfirmModal" tabindex="-1" role="dialog" aria-labelledby="basicModal" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4>順位表示確認</h4>
+            </div>
+            <div class="modal-body">
+                <label>順位を表示しますか？</label>
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="placecConfirmModalClose" class="btn btn-default" data-dismiss="modal">閉じる</button>
+                <button type="button" id="placecConfirmModalShow" class="btn btn-primary">表示</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="placecShowModal" tabindex="-1" role="dialog" aria-labelledby="basicModal" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4>順位表示</h4>
+            </div>
+            <div class="modal-body" id="placecShowModalLabel">
+                <label>何位です</label>
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="placecShowModalClose" class="btn btn-primary" data-dismiss="modal">閉じる</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="gameShareModal" tabindex="-1" role="dialog" aria-labelledby="basicModal" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4>共有用のURL・QRコード</h4>
+            </div>
+            <div class="modal-body">
+                <label>このURLまたhQRコードを他のプレイヤーに共有してください</label>
+                <p id="URLtoShare"></p>
+                <div id="QR"></div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="gameShareModalClose" class="btn btn-default" data-dismiss="modal">閉じる</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    button {
+      color: #000;
+    }
+</style>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js" integrity="sha512-CNgIRecGo7nphbeZ04Sc13ka07paqdeTu0WR1IM4kNcpmBAUSHSQX0FslNhTDadL4O5SAGapGt4FodqL8My0mA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>  
+<script type="text/javascript" src="{{ url_for('static', filename='game.js') }}"></script>
+
+{% endblock %}

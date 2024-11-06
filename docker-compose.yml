@@ -1,0 +1,9 @@
+services:
+  python3:
+    restart: always
+    build: .
+    container_name: 'ranking_docker'
+    working_dir: '/var/www'
+    tty: true
+    ports:
+      - "5000:5000"
